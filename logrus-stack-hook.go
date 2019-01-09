@@ -63,8 +63,17 @@ func (hook LogrusStackHook) Fire(entry *logrus.Entry) error {
 	// certain hoops. e.g. http handler in a separate package.
 	// This is a workaround.
 	for _, frame := range _frames {
-		if !strings.Contains(frame.File, "github.com/sirupsen/logrus") ||
-			!strings.Contains(frame.File, "response/response.go") {
+		skip := false
+
+		if strings.Contains(frame.File, "github.com/sirupsen/logrus") {
+			skip = true
+		}
+
+		if strings.Contains(frame.File, "response/response.go") {
+			skip = true
+		}
+
+		if !skip {
 			frames = append(frames, frame)
 		}
 	}
