@@ -63,7 +63,8 @@ func (hook LogrusStackHook) Fire(entry *logrus.Entry) error {
 	// certain hoops. e.g. http handler in a separate package.
 	// This is a workaround.
 	for _, frame := range _frames {
-		if !strings.Contains(frame.File, "github.com/sirupsen/logrus") {
+		if !strings.Contains(frame.File, "github.com/sirupsen/logrus") ||
+			!strings.Contains(frame.File, "response/response.go") {
 			frames = append(frames, frame)
 		}
 	}
@@ -77,10 +78,15 @@ func (hook LogrusStackHook) Fire(entry *logrus.Entry) error {
 			}
 		}
 
+		framesCap := len(frames)
+		if len(frames) > 3 {
+			framesCap = 2
+		}
+
 		// Set the available frames to "stack" field.
 		for _, level := range hook.StackLevels {
 			if entry.Level == level {
-				entry.Data["stack"] = frames
+				entry.Data["stack"] = frames[0:framesCap]
 				break
 			}
 		}

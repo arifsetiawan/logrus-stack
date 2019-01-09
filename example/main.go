@@ -4,7 +4,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/Gurpartap/logrus-stack"
+	"github.com/arifsetiawan/logrus-stack"
 	"github.com/sirupsen/logrus"
 )
 
